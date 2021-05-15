@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from main import main
+from main import run_all
 
 
 class AllTests(TestCase):
     def test_main(self):
-        main()
+        run_all()

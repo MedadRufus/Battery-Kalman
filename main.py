@@ -1,5 +1,6 @@
 import math as m
 import numpy as np
+
 from battery import Battery
 from kalman import ExtendedKalmanFilter as EKF
 from protocol import launch_experiment_protocol
@@ -88,7 +89,7 @@ def plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, curren
     plt.show()
 
 
-def main():
+def run_all():
     # discharged battery
     battery_simulation.actual_capacity = 0
 
@@ -131,4 +132,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    run_all()
