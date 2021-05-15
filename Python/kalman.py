@@ -1,11 +1,9 @@
 import numpy as np
-from numpy import zeros, eye
 
 
 class ExtendedKalmanFilter(object):
 
     def __init__(self, x, F, B, P, Q, R, Hx, HJacobian):
-
         self._x = x
         self._F = F
         self._B = B
@@ -15,9 +13,7 @@ class ExtendedKalmanFilter(object):
         self._Hx = Hx
         self._HJacobian = HJacobian
 
-
     def update(self, z):
-
         P = self._P
         R = self._R
         x = self._x
@@ -28,7 +24,7 @@ class ExtendedKalmanFilter(object):
         K = P * H.T * S.I
         self._K = K
 
-        hx =  self._Hx(x)
+        hx = self._Hx(x)
         y = np.subtract(z, hx)
         self._x = x + K * y
 

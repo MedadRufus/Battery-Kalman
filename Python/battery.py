@@ -22,10 +22,10 @@ class Battery:
 
     def update(self, time_delta):
         self.actual_capacity -= self.current * time_delta
-        exp_coeff = m.exp(-time_delta/(self.R1*self.C1))
+        exp_coeff = m.exp(-time_delta / (self.R1 * self.C1))
         self._RC_voltage *= exp_coeff
-        self._RC_voltage += self.R1*(1-exp_coeff)*self.current
-    
+        self._RC_voltage += self.R1 * (1 - exp_coeff) * self.current
+
     @property
     def current(self):
         return self._current
@@ -40,7 +40,7 @@ class Battery:
 
     @property
     def state_of_charge(self):
-        return self.actual_capacity/self.total_capacity
+        return self.actual_capacity / self.total_capacity
 
     @property
     def OCV_model(self):
@@ -52,25 +52,24 @@ class Battery:
 
 
 if __name__ == '__main__':
-    capacity = 3.2 #Ah
-    discharge_rate = 1 #C
-    time_step = 10 #s
+    capacity = 3.2  # Ah
+    discharge_rate = 1  # C
+    time_step = 10  # s
     cut_off_voltage = 2.5
 
-
-    current = capacity*discharge_rate
+    current = capacity * discharge_rate
     my_battery = Battery(capacity, 0.062, 0.01, 3000)
     my_battery.current = current
-    
+
     time = [0]
     SoC = [my_battery.state_of_charge]
     OCV = [my_battery.OCV]
     RC_voltage = [my_battery._RC_voltage]
     voltage = [my_battery.voltage]
-    
-    while my_battery.voltage>cut_off_voltage:
+
+    while my_battery.voltage > cut_off_voltage:
         my_battery.update(time_step)
-        time.append(time[-1]+time_step)
+        time.append(time[-1] + time_step)
         SoC.append(my_battery.state_of_charge)
         OCV.append(my_battery.OCV)
         RC_voltage.append(my_battery._RC_voltage)
@@ -83,7 +82,7 @@ if __name__ == '__main__':
     ax1 = fig.add_subplot(111)
 
     # title, labels
-    ax1.set_title('')    
+    ax1.set_title('')
     ax1.set_xlabel('SoC')
     ax1.set_ylabel('Voltage')
 
@@ -91,5 +90,3 @@ if __name__ == '__main__':
     ax1.plot(SoC, voltage, label="Total voltage")
 
     plt.show()
-
-
