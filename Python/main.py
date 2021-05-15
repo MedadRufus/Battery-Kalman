@@ -4,21 +4,34 @@ from battery import Battery
 from kalman import ExtendedKalmanFilter as EKF
 from protocol import launch_experiment_protocol
 
+# total capacity
+Q_tot = 3.2
+
+# Thevenin model values
+R0 = 0.062
+R1 = 0.01
+C1 = 3000
+
+# time period
+time_step = 10
+
+# Battery simulation model
+battery_simulation = Battery(Q_tot, R0, R1, C1)
 
 def get_EKF(R0, R1, C1, std_dev, time_step):
     # initial state (SoC is intentionally set to a wrong value)
     # x = [[SoC], [RC voltage]]
-    x = np.matrix([[0.5], \
+    x = np.matrix([[0.5],
                    [0.0]])
 
     exp_coeff = m.exp(-time_step / (C1 * R1))
 
     # state transition model
-    F = np.matrix([[1, 0], \
+    F = np.matrix([[1, 0],
                    [0, exp_coeff]])
 
     # control-input model
-    B = np.matrix([[-time_step / (Q_tot * 3600)], \
+    B = np.matrix([[-time_step / (Q_tot * 3600)],
                    [R1 * (1 - exp_coeff)]])
 
     # variance from std_dev
@@ -28,11 +41,11 @@ def get_EKF(R0, R1, C1, std_dev, time_step):
     R = var
 
     # state covariance
-    P = np.matrix([[var, 0], \
+    P = np.matrix([[var, 0],
                    [0, var]])
 
     # process noise covariance matrix
-    Q = np.matrix([[var / 50, 0], \
+    Q = np.matrix([[var / 50, 0],
                    [0, var / 50]])
 
     def HJacobian(x):
@@ -73,20 +86,10 @@ def plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, curren
 
     plt.show()
 
+def main():
 
-if __name__ == '__main__':
-    # total capacity
-    Q_tot = 3.2
 
-    # Thevenin model values
-    R0 = 0.062
-    R1 = 0.01
-    C1 = 3000
 
-    # time period
-    time_step = 10
-
-    battery_simulation = Battery(Q_tot, R0, R1, C1)
 
     # discharged battery
     battery_simulation.actual_capacity = 0
@@ -129,3 +132,8 @@ if __name__ == '__main__':
 
     # plot stuff
     plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, current)
+
+
+
+if __name__ == '__main__':
+    main()
