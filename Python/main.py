@@ -18,6 +18,7 @@ time_step = 10
 # Battery simulation model
 battery_simulation = Battery(Q_tot, R0, R1, C1)
 
+
 def get_EKF(R0, R1, C1, std_dev, time_step):
     # initial state (SoC is intentionally set to a wrong value)
     # x = [[SoC], [RC voltage]]
@@ -86,11 +87,8 @@ def plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, curren
 
     plt.show()
 
+
 def main():
-
-
-
-
     # discharged battery
     battery_simulation.actual_capacity = 0
 
@@ -106,7 +104,6 @@ def main():
     true_voltage = [battery_simulation.voltage]
     mes_voltage = [battery_simulation.voltage + np.random.normal(0, 0.1, 1)[0]]
     current = [battery_simulation.current]
-
 
     def update_all(actual_current):
         battery_simulation.current = actual_current
@@ -126,13 +123,11 @@ def main():
 
         return battery_simulation.voltage  # mes_voltage[-1]
 
-
     # launch experiment
     launch_experiment_protocol(Q_tot, time_step, update_all)
 
     # plot stuff
     plot_everything(time, true_voltage, mes_voltage, true_SoC, estim_SoC, current)
-
 
 
 if __name__ == '__main__':
